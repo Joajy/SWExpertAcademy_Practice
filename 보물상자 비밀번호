@@ -11,9 +11,7 @@ int main() {
     	set<string, greater<>> s;
     	string rot;
     	int n, k;
-        cin >> n >> k;
-        cin >> rot;
-
+        cin >> n >> k >> rot;
         for (int i = 0; i < n / 4; i++) {
             for (int j = 0; j < 4; j++) {
                 string tmp;
