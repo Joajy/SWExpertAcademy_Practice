@@ -1,0 +1,78 @@
+#include<iostream>
+using namespace std;
+#define MAX 1000
+
+struct Node {
+	int data, left, right;
+	char op;
+};
+
+Node node[MAX + 1];
+int n, b, x, y;
+
+void init() {
+	for (int i = 0; i <= MAX; i++) {
+		node[i].data = node[i].op = 0;
+		node[i].left = node[i].right = 0;
+	}
+}
+
+void InsertOp(char a, int b, int x, int y) {
+	node[b].op = a;
+	node[b].left = x;
+	node[b].right = y;
+}
+
+void Insert(int a, int b){
+	node[b].data = a;
+}
+
+void PostOrder(Node* pNode) {
+	if (pNode->data == 0 && pNode->op == '\0') return;
+	PostOrder(&node[pNode->left]);
+	PostOrder(&node[pNode->right]);
+	if (pNode->left != 0 && pNode->right != 0) {
+		if (pNode->op == '+')
+			pNode->data = node[pNode->left].data + node[pNode->right].data;
+		else if (pNode->op == '-')
+			pNode->data = node[pNode->left].data - node[pNode->right].data;
+		else if (pNode->op == '*')
+			pNode->data = node[pNode->left].data * node[pNode->right].data;
+		else if (pNode->op == '/')
+			pNode->data = node[pNode->left].data / node[pNode->right].data;
+	}
+}
+
+bool IsOperator(int a) {
+	if (a == '+' || a == '-' || a == '/' || a == '*')
+		return true;
+	return false;
+}
+
+int main() {
+	cin.tie(0), cout.tie(0);
+	ios_base::sync_with_stdio(0);
+	for (int i = 1; i <= 10; i++) {
+		init();
+		cin >> n;
+		for (int j = 0; j < n; j++) {
+			char a[10];
+			int num = 0;
+			cin >> b >> a;
+			if (a[0] >= '0' && a[0] <= '9') {
+				for (int dig = 0; a[dig]; dig++) {
+					num *= 10;
+					num += a[dig] - '0';
+				}
+				Insert(num, b);
+			}
+			else {
+				cin >> x >> y;
+				InsertOp(a[0], b, x, y);
+			}
+		}
+		PostOrder(&node[1]);
+		cout << '#' << i << ' ' << node[1].data << '\n';
+	}
+	return 0;
+}
